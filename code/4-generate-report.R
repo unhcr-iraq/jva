@@ -151,6 +151,7 @@ for( i in 1:nrow(chapters) )
 
   ## Getting chapter questions #######
   chapterquestions <- dico[which(dico$chapter== chaptersname ), c("chapter", "name", "label", "type", "qrepeatlabel", "fullname","listname") ]
+  chapterquestions <- chapterquestions[which(chapterquestions$qrepeatlabel == "household" ),  ]
 
   #levels(as.factor(as.character(dico[which(!(is.na(dico$chapter)) & dico$formpart=="questions"), c("type") ])))
   ##Loop.questions####################################################################################################

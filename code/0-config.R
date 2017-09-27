@@ -1,5 +1,6 @@
 #### Config file ###
 
+
 ### Can be manualy edited or interactively rewritten using the function kobo_projectconfig()
 
 ### 1. Place the form in xslform format - saved as .xls - not xlsx - in the data folder ######
