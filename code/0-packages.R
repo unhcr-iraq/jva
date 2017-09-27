@@ -49,13 +49,13 @@ packages <- c(
   #"scatterplot3d",
   "corrplot", # Visualiation of correlation Matrix
   "igraph", #network analysis and visualisation
-  "ellipse",  ## drawing ellipses and ellipse-like confidence regions
+ # "ellipse",  ## drawing ellipses and ellipse-like confidence regions
   #"factoextra", ## Visualize the Results of Multivariate Data Analyses
 
   ##### Packages for Mapping
-  "rgdal","rgeos","sp","maptools", ## standard Geo manipulation packages
-  "ggmap", ## get background from webmapping API
-  "raster","cartography", ## packages used for the maps --
+ # "rgdal","rgeos","sp","maptools", ## standard Geo manipulation packages
+ # "ggmap", ## get background from webmapping API
+ # "raster","cartography", ## packages used for the maps --
   "classInt",  ## used for univariate classification
  # "deldir", # delaunay triangulation & Voronoi
  # "viridis", # Default Color Maps from 'matplotlib'
@@ -136,10 +136,10 @@ packages <- c(
 
 #  "AER",  # Applied economtrics with R
 
-  "formatR", #  used to format the code
+ # "formatR", #  used to format the code
 
-  "parallel", ## Improve performance
-  "Rcpp", ## used to compile some pacjckages
+ # "parallel", ## Improve performance
+#  "Rcpp", ## used to compile some pacjckages
 
   "foreign", ## read data from SPSS, SAS or Stata
 #  "sqldf", "RODBC",
@@ -149,14 +149,14 @@ packages <- c(
   #"rJava", "XLConnect", ## Read and write excel files
   "readxl", ## Read Excel files
 
-  "httr", "rjson","jsonlite", ## get data from API
-  "XML", "xml2", ## Manipulation of xml
+#  "httr", "rjson","jsonlite", ## get data from API
+#  "XML", "xml2", ## Manipulation of xml
 
-  "RCurl", ##used to download files from API -install CURL before and separately
-  "devtools", # package used to load packages hosted in github --
+ # "RCurl", ##used to download files from API -install CURL before and separately
+#  "devtools", # package used to load packages hosted in github --
 
 #  "gmailr", # Access gmail api
-  "RGtk2",
+ # "RGtk2",
 #  "rattle", ## GUI for data mining
   ## used to generate reports
   "knitr", "pander", "xtable", "rmarkdown", "kableExtra","koRpus", "tables"

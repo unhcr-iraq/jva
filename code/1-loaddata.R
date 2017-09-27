@@ -25,7 +25,7 @@ library(koboloadeR)
 #rm(data)
 
 ## Might need to be tweaked -- double check
-data.or <- read.csv(path.to.data, sep=";", encoding="UTF-8", na.strings="")
+data.or <- read.csv(path.to.data, sep=",", encoding="UTF-8", na.strings="")
 
 #names(data.or)
 ### Need to replace slash by point in the variable name
