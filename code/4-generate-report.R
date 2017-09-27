@@ -122,9 +122,9 @@ for( i in 1:nrow(chapters) )
   cat("## Create weighted survey object", file = chapter.name , sep="\n", append=TRUE)
 
 
-  #cat("data.survey <- svydesign(ids = ~ section1.location.district ,  data = data,  weights = ~Normalized.Weight ,  fpc = ~fpc )", file = chapter.name , sep="\n", append=TRUE)
+  cat("household.survey <- svydesign(ids = ~ Cluster ,  data = household ,  weights = ~ weights ,  fpc = ~fpc )", file = chapter.name , sep="\n", append=TRUE)
   ## If no weight, the weighted object is unweigthted
-  cat("household.survey <- svydesign(ids = ~ 1 ,  data = household )", file = chapter.name , sep="\n", append=TRUE)
+  #cat("household.survey <- svydesign(ids = ~ 1 ,  data = household )", file = chapter.name , sep="\n", append=TRUE)
 
   cat(paste0("\n```\n", sep = '\n'), file = chapter.name, append=TRUE)
 
