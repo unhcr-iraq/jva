@@ -16,14 +16,17 @@ data.weight <- read.csv("data/household.csv", sep=",", encoding="UTF-8", na.stri
 ## saving formkey to keep together with the weighting
 
 weight <- unique(spssfile[ ,c("KEY", "weights",  "Cluster")])
-names(weight)[1] <- "meta.instanceID"
+#weight$meta.instanceID <- weight$KEY
 
 ## Cf https://rpubs.com/trjohns/survey-cluster
 ## calculate fpc i.e the number of clusters that should be used to build the survey object
 fpc <- nrow(as.data.frame(unique(weight$Cluster)))
 weight$fpc <- fpc
 
-household <- merge(x=data.weight, y=weight, by="meta.instanceID")
+write.csv(weight, "data/weight.csv", row.names = FALSE)
+# names(household)
+
+household <- merge(x=household, y=weight, by="KEY")
 
 ## Save another version in order to add indicators
 write.csv(household,"data/data2.csv")

@@ -8,10 +8,12 @@ library(koboloadeR)
 #form <- "form.xls"
 ## Run this only after data cleaning
 dico <- read.csv(paste0(mainDir,"/data/dico_",form,".csv"), encoding="UTF-8", na.strings="")
-household <- read.csv(paste0(mainDir,"/data/household-clean-weight.csv"), encoding="UTF-8", na.strings="NA")
-#household.back <- household
-#case_number_details <- read.csv(paste0(mainDir,"/data/case_number_details.csv"), encoding="UTF-8", na.strings="NA")
-#individual_biodata <- read.csv(paste0(mainDir,"/data/individual_biodata.csv"), encoding="UTF-8", na.strings="NA")
+
+household <- read.csv(paste0(mainDir,"/data/household1.csv"), encoding="UTF-8", na.strings="NA")
+individual_registered <- read.csv(paste0(mainDir,"/data/individual_registered1.csv"), encoding="UTF-8", na.strings="NA")
+reg_question <- read.csv(paste0(mainDir,"/data/reg_question1.csv"), encoding="UTF-8", na.strings="NA")
+difficulties_encountered <- read.csv(paste0(mainDir,"/data/difficulties_encountered1.csv"), encoding="UTF-8", na.strings="NA")
+
 
 
 ## Create the dicotemp #############################################################################
@@ -43,8 +45,8 @@ dicotemp$formpart <- "trigger"
 dicotemp$indic <- "feature"
 
 ####Load data analysis plan#############################################################################
-#library(readxl)
-#indicator <- read_excel("data/form.xls", sheet = "indicator")
+library(readxl)
+indicator <- read_excel("data/form.xls", sheet = "indicator")
 
 
 ## Load indicator info #############################################################################
@@ -128,7 +130,7 @@ household <- kobo_label(household , dico)
 
 cat("\n\nWrite backup\n")
 
-write.csv(household, "data/household2.csv")
-write.csv(case_number_details, "data/case_number_details2.csv")
-write.csv(individual_biodata , "data/individual_biodata2.csv")
+write.csv(household, "data/household2.csv", row.names = FALSE)
+write.csv(individual_registered, "data/individual_registered2.csv", row.names = FALSE)
+write.csv(reg_question , "data/reg_question2.csv", row.names = FALSE)
 
