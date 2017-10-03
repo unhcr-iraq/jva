@@ -144,13 +144,13 @@ for( i in 1:nrow(chapters) )
  # cat("difficulties_encountered.survey <- svydesign(ids = ~ 1  ,  data = difficulties_encountered)", file=chapter.name , sep="\n", append=TRUE)
 
 
-  cat(paste0("\n```\n", sep = '\n'), file = chapter.name, append=TRUE)
 
   cat("household.survey <- svydesign( data = household , ids = ~ Cluster ,   weights = ~ weights ,  fpc = ~fpc)", file=chapter.name , sep="\n", append=TRUE)
   cat("reg_question.survey <- svydesign( data = reg_question , ids = ~ Cluster ,   weights = ~ weights ,  fpc = ~fpc)", file=chapter.name , sep="\n", append=TRUE)
   cat("individual_registered.survey <- svydesign( data = individual_registered , ids = ~ Cluster ,   weights = ~ weights ,  fpc = ~fpc)", file=chapter.name , sep="\n", append=TRUE)
   cat("difficulties_encountered.survey <- svydesign( data = difficulties_encountered , ids = ~ Cluster ,   weights = ~ weights ,  fpc = ~fpc)", file=chapter.name , sep="\n", append=TRUE)
 
+  cat(paste0("\n```\n", sep = '\n'), file = chapter.name, append=TRUE)
 
 
   ### To DO : Offer option to insert in the report skeleton interpretation questions
