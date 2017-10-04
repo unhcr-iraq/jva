@@ -180,6 +180,12 @@ reg_question <- kobo_encode(reg_question, dico)
 reg_question <- kobo_label(reg_question , dico)
 
 
+cat("\n\n\n difficulties_encountered \n\n\n\n")
+difficulties_encountered <- kobo_split_multiple(difficulties_encountered, dico)
+difficulties_encountered <- kobo_encode(difficulties_encountered, dico)
+difficulties_encountered <- kobo_label(difficulties_encountered , dico)
+
+
 cat("\n\nWrite backup\n")
 
 write.csv(household, "data/household1.csv", row.names = FALSE)

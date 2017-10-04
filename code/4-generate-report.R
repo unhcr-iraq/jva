@@ -81,10 +81,10 @@ names(chapters)[1] <- "Chapter"
 
 for( i in 1:nrow(chapters) )
 {
-  # i <-1
+  # i <-2
   chaptersname <- as.character(chapters[ i , 1])
   cat(paste(i, " - Render chapter for ",as.character(chapters[ i , 1]),"\n" ))
-  chapter.name <- paste("code/",i,"-", chaptersname, "-chapter.Rmd", sep="")
+  chapter.name <- paste("code/report-",i,"-", chaptersname, "-chapter.Rmd", sep="")
 
   ## TO DO : CHECK IF FILE EXIST - AND REQUEST USER TO DELETE BEFORE REGENERATING - SUGGESTING TO SAVE PREVIOUS UNDER NEW NAME
   if (file.exists(chapter.name)) file.remove(chapter.name)
@@ -137,11 +137,11 @@ for( i in 1:nrow(chapters) )
 
   ## To do use configuration file to weight the data
   cat("## Create weighted survey object", file=chapter.name , sep="\n", append=TRUE)
-  ## Below is an unweighted survey design - you may adjust as necessary!
+ ## Below is an unweighted survey design - you may adjust as necessary!
  #  cat("household.survey <- svydesign(ids = ~ 1 ,  data = household )", file = chapter.name , sep="\n", append=TRUE)
-  # cat("reg_question.survey <- svydesign(ids = ~ 1  ,  data = reg_question)", file=chapter.name , sep="\n", append=TRUE)
- # cat("individual_registered.survey <- svydesign(ids = ~ 1  ,  data = individual_registered)", file=chapter.name , sep="\n", append=TRUE)
- # cat("difficulties_encountered.survey <- svydesign(ids = ~ 1  ,  data = difficulties_encountered)", file=chapter.name , sep="\n", append=TRUE)
+ #  cat("reg_question.survey <- svydesign(ids = ~ 1  ,  data = reg_question)", file=chapter.name , sep="\n", append=TRUE)
+ #  cat("individual_registered.survey <- svydesign(ids = ~ 1  ,  data = individual_registered)", file=chapter.name , sep="\n", append=TRUE)
+ #  cat("difficulties_encountered.survey <- svydesign(ids = ~ 1  ,  data = difficulties_encountered)", file=chapter.name , sep="\n", append=TRUE)
 
 
 
@@ -174,7 +174,7 @@ for( i in 1:nrow(chapters) )
   cat(paste("# Compilation of questions results"),file = chapter.name ,sep="\n", append=TRUE)
 
   ## Getting chapter questions #######
-  chapterquestions <- dico[which(dico$chapter== chaptersname & dico$type %in% c("select_one","integer","select_multiple", "text","date")),
+  chapterquestions <- dico[which(dico$chapter== chaptersname & dico$type %in% c("select_one","integer","select_multiple_d", "text","date")),
                            c("chapter", "name", "label", "type", "qrepeatlabel", "fullname","listname") ]
 
   #levels(as.factor(as.character(dico[which(!(is.na(dico$chapter)) & dico$formpart=="questions"), c("type") ])))
@@ -182,7 +182,7 @@ for( i in 1:nrow(chapters) )
 
   for(j in 1:nrow(chapterquestions))
   {
-    # j <-1
+    # j <-11
     ## Now getting level for each questions
     questions.name <- as.character(chapterquestions[ j , c("fullname")])
     questions.shortname <- as.character(chapterquestions[ j , c("name")])
@@ -191,7 +191,7 @@ for( i in 1:nrow(chapters) )
     questions.label <- as.character(chapterquestions[ j , c("label")])
     questions.listname <- as.character(chapterquestions[ j , c("listname")])
     questions.variable <- paste0(questions.frame,"$",questions.name)
-    cat(paste("\n", j, " - Render question: ", questions.variable, " -",questions.type, "\n" ))
+    cat(paste("\n", i, "-", j, " - Render question: ", questions.variable, " -",questions.type, "\n" ))
 
     ## write question name-------
     cat("\n ",file = chapter.name , sep="\n",append=TRUE)
@@ -229,7 +229,7 @@ for( i in 1:nrow(chapters) )
       } else{
         cat(paste0("## display table"),file = chapter.name ,sep="\n",append=TRUE)
         cat(paste0("## Reorder factor"),file = chapter.name ,sep="\n",append=TRUE)
-        cat(paste0("frequ[ ,1] = factor(frequ[ ,1],levels(frequ[ ,1])[order(frequ$Freq, decreasing = TRUE)])"),file = chapter.name ,sep="\n",append=TRUE)
+        cat(paste0("frequ[ ,1] = factor(frequ[ ,1],levels(frequ[ ,1])[order(frequ$Freq, decreasing = FALSE)])"),file = chapter.name ,sep="\n",append=TRUE)
         cat(paste0("frequ <- frequ[ order(frequ[ , 1]) ,  ]"),file = chapter.name ,sep="\n",append=TRUE)
         cat(paste0("names(frequ)[1] <- \"", questions.shortname,"\""),file = chapter.name ,sep="\n",append=TRUE)
         cat(paste0("kable(frequ, caption=\"__Table__:", questions.label,"\") %>% kable_styling ( position = \"center\")"),file = chapter.name ,sep="\n",append=TRUE)
@@ -277,7 +277,7 @@ for( i in 1:nrow(chapters) )
       cat(paste0("\n\n\n\n", sep = '\n'), file = chapter.name, append=TRUE)
 
       ##selectone.crosstabulation #######################################################################
-      if( nrow(disaggregation)==0 ) {
+      if( nrow(disaggregation) == 0 ) {
         cat("No disaggregation requested for this question...\n",file = chapter.name , sep="\n", append=TRUE)
         cat("No disaggregation requested for this question...\n")
         cat("\n", file = chapter.name, append=TRUE)
@@ -303,9 +303,9 @@ for( i in 1:nrow(chapters) )
           disag.variable <- paste0(questions.frame,"$",disag.name)
 
           if (disag.variable == questions.variable ){
-            cat(paste0("cat(\"\\n\")"),file = chapter.name , sep="\n", append=TRUE)
-          } else if (disag.frame != questions.frame ){
-            cat(paste0("cat(\"\\n\")"),file = chapter.name , sep="\n", append=TRUE)
+            cat(paste0("\n"),file = chapter.name , sep="\n", append=TRUE)
+          } else if (nrow(as.data.frame(table( get(paste0(questions.frame))[[disag.name]]))) == 0 ){
+            cat(paste0("\n"),file = chapter.name , sep="\n", append=TRUE)
           } else {
 
 
@@ -330,7 +330,7 @@ for( i in 1:nrow(chapters) )
               ## Open chunk
               cat(paste0("\n```{r ", questions.name,"x",h, ".rel, echo=FALSE, warning=FALSE, cache=FALSE, tidy = TRUE, message=FALSE, comment = \"\", fig.height=",figheight*3,", size=\"small\"}\n"), file = chapter.name, append=TRUE)
 
-              cat(paste("\n", h, " - Render disaggregation : ", disag.label, "for question: ", questions.label,"\n" ))
+              cat(paste("\n",i,"-", j,"-" , h, " - Render disaggregation : ", disag.label, "for question: ", questions.label,"\n" ))
 
               ## Boxplot
 
@@ -386,7 +386,7 @@ for( i in 1:nrow(chapters) )
 
               ## Open chunk
               cat(paste0("\n```{r ", questions.name,h, ".rel, echo=FALSE, warning=FALSE, cache=FALSE, tidy = TRUE, message=FALSE, comment = \"\", fig.height=",figheight,", size=\"small\"}\n"), file = chapter.name, append=TRUE)
-              cat(paste("\n", h, " - Render disaggregation: ", disag.label, "for question: ", questions.label,"\n" ))
+              cat(paste("\n",i,"-", j,"-" , h, " - Render disaggregation: ", disag.label, "for question: ", questions.label,"\n" ))
               cat(paste0("crosssfrequ.weight <-as.data.frame(prop.table(svytable(~", questions.name ," + ", disag.name,", design =",questions.frame ,".survey  ), margin = 2))"),file = chapter.name ,sep="\n",append=TRUE)
               cat(paste0("names(crosssfrequ.weight)[1] <- \"quest\""),file = chapter.name ,sep="\n",append=TRUE)
               cat(paste0("names(crosssfrequ.weight)[2] <- \"disag\""),file = chapter.name ,sep="\n",append=TRUE)
@@ -625,9 +625,9 @@ for( i in 1:nrow(chapters) )
           disag.variable <- paste0(questions.frame,"$",disag.name)
 
           if (disag.variable == questions.variable){
-            cat(paste0("cat(\"\\n\")"),file = chapter.name , sep="\n", append=TRUE)
-          }  else if (disag.frame != questions.frame ){
-            cat(paste0("cat(\"\\n\")"),file = chapter.name , sep="\n", append=TRUE)
+            cat(paste0("\n"),file = chapter.name , sep="\n", append=TRUE)
+          }  else if (nrow(as.data.frame(table( get(paste0(questions.frame))[[disag.name]]))) == 0 ){
+            cat(paste0("\n"),file = chapter.name , sep="\n", append=TRUE)
           } else {
 
 
@@ -653,7 +653,7 @@ for( i in 1:nrow(chapters) )
               ## Open chunk
               cat(paste0("\n```{r ", questions.name,"x",h, ".rel, echo=FALSE, warning=FALSE, cache=FALSE, tidy = TRUE, message=FALSE, comment = \"\", fig.height=",figheight,", size=\"small\"}\n"), file = chapter.name, append=TRUE)
 
-              cat(paste("\n", h, " - Render disaggregation : ", disag.label, "for question: ", questions.label,"\n" ))
+              cat(paste("\n", i,"-", j,"-" , h, " - Render disaggregation : ", disag.label, "for question: ", questions.label,"\n" ))
 
               ## Boxplot
 
@@ -695,7 +695,7 @@ for( i in 1:nrow(chapters) )
               ## Open chunk
               cat(paste0("\n```{r ", questions.name,"x",h, ".rel, echo=FALSE, warning=FALSE, cache=FALSE, tidy = TRUE, message=FALSE, comment = \"\", fig.height=8, size=\"small\"}\n"), file = chapter.name, append=TRUE)
 
-              cat(paste("\n", h, " - Render disaggregation : ", disag.label, "for question: ", questions.label,"\n" ))
+              cat(paste("\n", i,"-", j,"-" , h, " - Render disaggregation : ", disag.label, "for question: ", questions.label,"\n" ))
 
 
               cat(paste0("data.outlier1 <- ",questions.frame,"$",disag.name),file = chapter.name ,sep="\n",append=TRUE)
@@ -742,39 +742,39 @@ for( i in 1:nrow(chapters) )
 
 
       ##select.multi####################################################################################################
-    } else if ( questions.type =="select_multiple_d" ) {
-      cat(paste("Multiple choice question  " ,"\n\n",sep=""),file = chapter.name ,sep="\n",append=TRUE)
+    } else if ( questions.type == "select_multiple_d" ) {
+      cat(paste("Multiple choice question  " ,"\n\n",sep = ""),file = chapter.name ,sep="\n",append=TRUE)
 
 
       ###select.multi.tab######################################################################
 
-      cat(paste("### Tabulation" ,sep=""),file = chapter.name ,sep="\n",append=TRUE)
+      cat(paste("### Tabulation" ,sep = ""),file = chapter.name ,sep="\n",append=TRUE)
 
       ##Compute contengency table
-      selectmultilist1 <- as.data.frame(dico[dico$type=="select_multiple" & dico$listname == as.character(questions.listname) &
-                                               grepl(as.character(questions.shortname),dico$fullname)==TRUE , c("fullname")])
+      selectmultilist1 <- as.data.frame(dico[dico$type == "select_multiple" & dico$listname == as.character(questions.listname) &
+                                               grepl(as.character(questions.shortname),dico$fullname) == TRUE , c("fullname")])
       names(selectmultilist1)[1] <- "check"
 
       check <- as.data.frame(names(get(paste0(questions.frame))))
       names(check)[1] <- "check"
       check$id <- row.names(check)
-      check <- merge(x=check, y=selectmultilist1,by="check")
+      check <- merge(x = check, y=selectmultilist1,by="check")
       selectmultilist <- as.character(check[ ,1])
       ## Reshape answers
       data.selectmultilist <- get(paste0(questions.frame))[ ,selectmultilist ]
       data.selectmultilist$id <- rownames(data.selectmultilist)
       totalanswer <- nrow(data.selectmultilist)
-      data.selectmultilist <- data.selectmultilist[ data.selectmultilist[ ,1]!="Not replied", ]
-      percentreponse <- paste0(round((nrow(data.selectmultilist)/totalanswer)*100,digits=1),"%")
-      meltdata <- melt(data.selectmultilist,id="id")
+      data.selectmultilist <- data.selectmultilist[ data.selectmultilist[ ,1] != "Not replied", ]
+      percentreponse <- paste0(round((nrow(data.selectmultilist)/totalanswer)*100,digits = 1),"%")
+      meltdata <- melt(data.selectmultilist,id = "id")
       castdata <- as.data.frame(table(meltdata[c("value")]))
       castdata$freqper <- castdata$Freq/nrow(data.selectmultilist)
-      castdata <- castdata[castdata$Var1!="Not selected", ]
-      castdata$Var1 <-factor(castdata$Var1, levels=castdata[order(castdata$freqper), "Var1"])
-      frequ <- castdata[castdata$Var1!="", ]
+      castdata <- castdata[castdata$Var1 != "Not selected", ]
+      castdata$Var1 <- factor(castdata$Var1, levels=castdata[order(castdata$freqper), "Var1"])
+      frequ <- castdata[castdata$Var1 != "", ]
 
-      if (nrow(frequ) %in% c("0","1")){
-        cat("No responses recorded for this question...\n",file = chapter.name , sep="\n", append=TRUE)
+      if (nrow(frequ) %in% c("0","1")) {
+        cat("No responses recorded for this question...\n",file = chapter.name , sep="\n", append = TRUE)
         cat("No responses recorded for this question...\n")
       } else{
 
@@ -849,17 +849,25 @@ for( i in 1:nrow(chapters) )
     } else if ( questions.type =="text" ) {
       cat(paste("Open ended question  in data frame: ",questions.frame,"\n\n", sep=""),file = chapter.name ,sep="\n",append=TRUE)
 
+      ## Check if the there are answeers to that questions...
+      frequ <- as.data.frame(table( get(paste0(questions.frame))[[questions.name]]))
 
-      cat(paste("List of given answers \n" ,sep=""),file = chapter.name ,sep="\n",append=TRUE)
-      ## Open chunk
-      cat(paste0("```{r ", questions.name, ".tab, echo=FALSE, warning=FALSE, cache=FALSE, tidy = TRUE, message=FALSE, comment = \"\", fig.height=4, size=\"small\"}\n", sep = '\n'), file = chapter.name, append=TRUE)
-      cat(paste0("textresponse <- as.data.frame(table(",questions.frame,"[!(is.na(",questions.variable,")), c(\"",questions.name,"\")]))"),file = chapter.name ,sep="\n",append=TRUE)
+      if (nrow(frequ) %in% c("0","1")){
+        cat(paste0("cat(\"No responses recorded for this question...\")"),file = chapter.name , sep="\n", append=TRUE)
+        cat("No responses recorded for this question...\n")
+      } else{
 
-      cat(paste0("names(textresponse)[1] <- \"", questions.shortname,"\""),file = chapter.name ,sep="\n",append=TRUE)
-      cat(paste0("kable(textresponse, caption=\"__Table__:", questions.label,"\") %>% kable_styling ( position = \"center\")"),file = chapter.name ,sep="\n",append=TRUE)
+        cat(paste("List of given answers \n" ,sep=""),file = chapter.name ,sep="\n",append=TRUE)
+        ## Open chunk
+        cat(paste0("```{r ", questions.name, ".tab, echo=FALSE, warning=FALSE, cache=FALSE, tidy = TRUE, message=FALSE, comment = \"\", fig.height=4, size=\"small\"}\n", sep = '\n'), file = chapter.name, append=TRUE)
+        cat(paste0("textresponse <- as.data.frame(table(",questions.frame,"[!(is.na(",questions.variable,")), c(\"",questions.name,"\")]))"),file = chapter.name ,sep="\n",append=TRUE)
 
-      ## Close chunk
-      cat(paste0("\n```\n", sep = '\n'), file = chapter.name, append=TRUE)
+        cat(paste0("names(textresponse)[1] <- \"", questions.shortname,"\""),file = chapter.name ,sep="\n",append=TRUE)
+        cat(paste0("kable(textresponse, caption=\"__Table__:", questions.label,"\") %>% kable_styling ( position = \"center\")"),file = chapter.name ,sep="\n",append=TRUE)
+
+        ## Close chunk
+        cat(paste0("\n```\n", sep = '\n'), file = chapter.name, append=TRUE)
+      }
       # End test on question on type
     }
 
@@ -890,9 +898,9 @@ cat(" Render now reports... \n")
 for(i in 1:nrow(chapters)) {
   chaptersname <- as.character(chapters[ i , 1])
   cat(paste(i, " - Render word output report for ",chaptersname))
-  render(paste0("code/",i,"-", chaptersname, "-chapter.Rmd", sep=""))
+  render(paste0("code/report-",i,"-", chaptersname, "-chapter.Rmd", sep=""))
   ## Put the report in the out folder
-  file.rename(paste0("code/",i,"-", chaptersname, "-chapter.docx", sep=""), paste0("out/",i,"-", chaptersname,Sys.Date(), "-chapter.docx"))
+  file.rename(paste0("code/report-",i,"-", chaptersname, "-chapter.docx", sep=""), paste0("out/report-",i,"-", chaptersname,Sys.Date(), "-chapter.docx"))
 
 }
 
