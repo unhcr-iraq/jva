@@ -108,13 +108,15 @@ datalabel <- as.data.frame( names(reg_question))
 names(datalabel)[1] <- "nameor"
 datalabel$nameor <- as.character(datalabel$nameor)
 datalabel$namenew <- str_replace_all(datalabel$nameor, "-", ".")
-datalabel$namenew<- paste("section2.reg_question.", datalabel$namenew, sep="")
+### need to add prefix :  demo.reg_question.. ..
+datalabel$namenew<- paste("demo.reg_question.", datalabel$namenew, sep="")
 names(reg_question) <- datalabel[, 2]
+
 
 ## merge
 #names(reg_question)
 #levels(as.factor(household$SET.OF.section2.reg_question))
-reg_question$SET.OF.demo.reg_question <- reg_question$section2.reg_question.SET.OF.reg_question
+reg_question$SET.OF.demo.reg_question <- reg_question$demo.reg_question.SET.OF.reg_question
 reg_question <- join(y= household, x= reg_question, by="SET.OF.demo.reg_question", type="right")
 
 #################################################################################################################################
@@ -127,7 +129,6 @@ names(datalabel)[1] <- "nameor"
 datalabel$nameor <- as.character(datalabel$nameor)
 datalabel$namenew <- str_replace_all(datalabel$nameor, "-", ".")
 names(individual_registered) <- datalabel[, 2]
-
 
 #names(individual_registered)
 individual_registered <- join(y= household, x= individual_registered, by="SET.OF.individual_registered", type="right")
@@ -144,9 +145,11 @@ names(datalabel)[1] <- "nameor"
 #levels(datalabel$nameor)
 datalabel$nameor <- as.character(datalabel$nameor)
 datalabel$namenew <- str_replace_all(datalabel$nameor, "-", ".")
+### need to add prefix :  critical_info_hh.difficulties_encountered.
+datalabel$namenew<- paste("critical_info_hh.difficulties_encountered.", datalabel$namenew, sep="")
 names(difficulties_encountered) <- datalabel[, 2]
 #names(difficulties_encountered)
-difficulties_encountered$SET.OF.critical_info_hh.difficulties_encountered <- difficulties_encountered$SET.OF.difficulties_encountered
+difficulties_encountered$SET.OF.critical_info_hh.difficulties_encountered <- difficulties_encountered$critical_info_hh.difficulties_encountered.SET.OF.difficulties_encountered
 difficulties_encountered <- join(y= household, x= difficulties_encountered, by="SET.OF.critical_info_hh.difficulties_encountered", type="right")
 
 
