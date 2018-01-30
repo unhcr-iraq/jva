@@ -96,7 +96,6 @@ names(household) <- datalabel[, 2]
 ##### Adding weight and removing some forms
 cat("\n\n\n Adding weight and removing some forms \n\n\n\n")
 weight <- read_csv("data/weight.csv")
-
 household <- right_join(x = household, y = weight, by = "KEY")
 
 #################################################################################################################################
@@ -109,7 +108,7 @@ names(datalabel)[1] <- "nameor"
 datalabel$nameor <- as.character(datalabel$nameor)
 datalabel$namenew <- str_replace_all(datalabel$nameor, "-", ".")
 ### need to add prefix :  demo.reg_question.. ..
-datalabel$namenew<- paste("demo.reg_question.", datalabel$namenew, sep="")
+datalabel$namenew<- paste("demo.reg_question.", datalabel$namenew, sep = "")
 names(reg_question) <- datalabel[, 2]
 
 
@@ -146,11 +145,12 @@ names(datalabel)[1] <- "nameor"
 datalabel$nameor <- as.character(datalabel$nameor)
 datalabel$namenew <- str_replace_all(datalabel$nameor, "-", ".")
 ### need to add prefix :  critical_info_hh.difficulties_encountered.
-datalabel$namenew<- paste("critical_info_hh.difficulties_encountered.", datalabel$namenew, sep="")
+datalabel$namenew<- paste("critical_info_hh.difficulties_encountered.", datalabel$namenew, sep = "")
 names(difficulties_encountered) <- datalabel[, 2]
 #names(difficulties_encountered)
 difficulties_encountered$SET.OF.critical_info_hh.difficulties_encountered <- difficulties_encountered$critical_info_hh.difficulties_encountered.SET.OF.difficulties_encountered
-difficulties_encountered <- join(y= household, x= difficulties_encountered, by="SET.OF.critical_info_hh.difficulties_encountered", type="right")
+difficulties_encountered <- join(y = household, x = difficulties_encountered,
+                                 by = "SET.OF.critical_info_hh.difficulties_encountered", type = "right")
 
 
 
@@ -188,10 +188,27 @@ difficulties_encountered <- kobo_label(difficulties_encountered , dico)
 
 cat("\n\nWrite backup\n")
 
-write.csv(household, "data/household1.csv", row.names = FALSE)
-write.csv(individual_registered, "data/individual_registered1.csv", row.names = FALSE)
-write.csv(reg_question , "data/reg_question1.csv", row.names = FALSE)
-write.csv(difficulties_encountered, "data/difficulties_encountered1.csv", row.names = FALSE)
+write.csv(household, "data/household.csv", row.names = FALSE)
+write.csv(individual_registered, "data/individual_registered.csv", row.names = FALSE)
+write.csv(reg_question , "data/reg_question.csv", row.names = FALSE)
+write.csv(difficulties_encountered, "data/difficulties_encountered.csv", row.names = FALSE)
 
 
+############################################################
+## Build anonymised version of the frame
 
+cat("\n\n\n Anonymise Household \n\n\n\n")
+household.anom <- kobo_anonymise(household, dico)
+write.csv(household.anom, "data/household-anom.csv", row.names = FALSE, na = "")
+
+cat("\n\n\n Anonymise individual_registered \n\n\n\n")
+individual_registered.anom <- kobo_anonymise(individual_registered, dico)
+write.csv(individual_registered.anom, "data/individual_registered-anom.csv", row.names = FALSE, na = "")
+
+cat("\n\n\n Anonymise reg_question \n\n\n\n")
+reg_question.anom <- kobo_anonymise(reg_question, dico)
+write.csv(reg_question.anom, "data/reg_question-anom.csv", row.names = FALSE, na = "")
+
+cat("\n\n\n Anonymise difficulties_encountered \n\n\n\n")
+difficulties_encountered.anom <- kobo_anonymise(difficulties_encountered, dico)
+write.csv(difficulties_encountered.anom, "data/difficulties_encountered-anom.csv", row.names = FALSE, na = "")
